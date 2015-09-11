@@ -1,0 +1,14 @@
+JRuyi Echo Server Example
+Copyright 2015 JRuyi.org
+
+This product includes software(SLF4J) developed at
+The Quality Open Software (http://www.qos.ch/).
+Licensed under the MIT License.
+
+This product includes software(Disruptor) developed at
+The LMAX Exchange (http://www.lmax.com/).
+Licensed under the Apache License 2.0.
+
+This product includes software(JRuyi Core) developed at
+JRuyi.org (http://www.jruyi.org/).
+Licensed under the Apache License 2.0.

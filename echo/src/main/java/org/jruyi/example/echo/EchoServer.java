@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package org.jruyi.example.discard;
+package org.jruyi.example.echo;
 
 import org.jruyi.core.INioService;
 import org.jruyi.core.ITcpServerConfiguration;
@@ -21,40 +21,43 @@ import org.jruyi.io.IBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DiscardServer {
+public class EchoServer {
 
-	private static final Logger c_logger = LoggerFactory.getLogger(DiscardServer.class);
-
-	static INioService<IBuffer, Object, ? extends ITcpServerConfiguration> s_tcpServer;
+	private static final Logger c_logger = LoggerFactory.getLogger(EchoServer.class);
 
 	static class ShutdownHook extends Thread {
 
+		private final INioService<IBuffer, IBuffer, ? extends ITcpServerConfiguration> m_tcpServer;
+
+		ShutdownHook(INioService<IBuffer, IBuffer, ? extends ITcpServerConfiguration> tcpServer) {
+			m_tcpServer = tcpServer;
+		}
+
 		@Override
 		public void run() {
-			s_tcpServer.stop();
+			m_tcpServer.stop();
 		}
 	}
 
 	public static void main(String[] args) {
 		try {
 			// Build an Nio Service of type TcpServer
-			final INioService<IBuffer, Object, ? extends ITcpServerConfiguration> tcpServer = RuyiCore
+			final INioService<IBuffer, IBuffer, ? extends ITcpServerConfiguration> tcpServer = RuyiCore
 					.newTcpServerBuilder()
-					.port(10009)
-					.serviceId("jruyi.example.discard")
+					.port(10007)
+					.serviceId("jruyi.example.echo")
 					.build();
 
 			// Set sessionListener
-			tcpServer.sessionListener(new DiscardServerListener());
+			tcpServer.sessionListener(new EchoServerListener(tcpServer));
 
 			// Start tcpServer
 			tcpServer.start();
 
 			// To shutdown gracefully
-			s_tcpServer = tcpServer;
-			Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+			Runtime.getRuntime().addShutdownHook(new ShutdownHook(tcpServer));
 		} catch (Throwable t) {
-			c_logger.error("Failed to start discard service", t);
+			c_logger.error("Failed to start echo service", t);
 		}
 	}
 }

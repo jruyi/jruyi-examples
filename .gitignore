@@ -18,3 +18,7 @@
 /discard/build
 /discard/bin
 /discard/target
+
+/echo/build
+/echo/bin
+/echo/target
