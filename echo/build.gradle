@@ -16,7 +16,7 @@ apply plugin: 'java'
 
 group 'org.jruyi.example'
 version '1.0.0-SNAPSHOT'
-description = "A JRuyi example showing how to write a echo server"
+description = "A JRuyi example showing how to write an echo server"
 
 ext {
 	title = "Echo Server Example"
