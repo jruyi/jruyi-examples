@@ -12,14 +12,20 @@
  * limitations under the License.
  */
 
+plugins {
+	id "org.jruyi.osgibnd" version "0.4.0"
+	id "org.jruyi.dist" version "0.3.4"
+}
+
 apply plugin: 'java'
 
-group 'org.jruyi.example'
-version '1.0.0-SNAPSHOT'
-description = "A JRuyi example showing how to write an echo server"
+group = 'org.jruyi.example'
+archivesBaseName = 'org.jruyi.example.daytime'
+version = '1.0.0-SNAPSHOT'
+description = "A JRuyi example showing how to write a daytime server"
 
 ext {
-	title = "Echo Server Example"
+	title = "Daytime Server Example"
 	organizationId = 'org.jruyi'
 	organizationName = 'JRuyi.org'
 	organizationUrl = 'http://www.jruyi.org/'
@@ -30,15 +36,9 @@ ext {
 	createdBy = "${System.getProperty('java.version')} (${System.getProperty('java.vm.vendor')})"
 }
 
-repositories {
-	jcenter()
-}
-
 dependencies {
-	compile 'org.slf4j:slf4j-api:1.7.12'
-	compile 'org.slf4j:slf4j-simple:1.7.12'
-	compile 'com.lmax:disruptor:3.3.2'
-	compile 'org.jruyi:jruyi-core:2.4.0'
+	compile 'org.osgi:org.osgi.compendium:4.3.1'
+	compile 'org.jruyi:jruyi-api:2.3.1'
 }
 
 compileJava {
@@ -50,20 +50,23 @@ compileJava {
 jar {
 	manifest {
 		attributes(
-				'Specification-Title': title,
-				'Specification-Version': version,
-				'Specification-Vendor': organizationName,
-				'Specification-Vendor-Id': organizationId,
-				'Implementation-Title': title,
-				'Implementation-Version': version,
-				'Implementation-Vendor': organizationName,
-				'Created-By': createdBy,
-				'Main-Class': 'org.jruyi.example.echo.EchoServer',
+				'Export-Package': '!*',
+				'-dsannotations': '*',
 		)
 	}
+}
 
-	from {
-		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+distributions {
+	main {
+		contents {
+			from(jar.outputs.files) {
+				into "bundles"
+				rename { "${archivesBaseName}.jar" }
+			}
+
+			from('src/main/jruyi/conf/prov') {
+				into "${jruyiInstHomeDir}/conf/prov"
+			}
+		}
 	}
-	exclude 'META-INF/**'
 }

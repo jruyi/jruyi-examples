@@ -1,0 +1,5 @@
+bundle:start ${jruyi.bundle.base.url}org.jruyi.example.daytime.jar
+
+if {not {exists "jruyi.example.daytime"}} {
+	conf:create jruyi.example.daytime port=10013
+}

@@ -22,3 +22,7 @@
 /echo/build
 /echo/bin
 /echo/target
+
+/daytime/build
+/daytime/bin
+/daytime/target
