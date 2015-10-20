@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
-import org.jruyi.common.IService;
 import org.jruyi.common.Properties;
 import org.jruyi.io.IBuffer;
 import org.jruyi.io.ISession;
@@ -41,7 +40,7 @@ public class DaytimeServer extends SessionListener<Object, Object> {
 	private ComponentFactory m_tcpServerFactory;
 
 	private ComponentInstance m_tcpServer;
-	private ISessionService m_ss;
+	private ISessionService<Object, Object> m_ss;
 
 	@Override
 	public void onSessionOpened(ISession session) {
@@ -66,11 +65,11 @@ public class DaytimeServer extends SessionListener<Object, Object> {
 
 	@Reference(name = "tcpServerFactory", //
 	target = "(" + ComponentConstants.COMPONENT_NAME + "=" + IoConstants.CN_TCPSERVER_FACTORY + ")")
-	void bindTcpServerFactory(ComponentFactory factory) {
+	void setTcpServerFactory(ComponentFactory factory) {
 		m_tcpServerFactory = factory;
 	}
 
-	void unbindTcpServerFactory(ComponentFactory factory) {
+	void unsetTcpServerFactory(ComponentFactory factory) {
 		m_tcpServerFactory = null;
 	}
 
@@ -81,8 +80,9 @@ public class DaytimeServer extends SessionListener<Object, Object> {
 		conf.put("tcpNoDelay", true); // Disable Nagle's algorithm
 
 		// Create the Session Service of TcpServer
-		ComponentInstance tcpServer = m_tcpServerFactory.newInstance(conf);
-		ISessionService ss = (ISessionService) tcpServer.getInstance();
+		final ComponentInstance tcpServer = m_tcpServerFactory.newInstance(conf);
+		@SuppressWarnings("unchecked")
+		final ISessionService<Object, Object> ss = (ISessionService<Object, Object>) tcpServer.getInstance();
 
 		// Set SessionListener
 		ss.setSessionListener(this);
@@ -93,7 +93,7 @@ public class DaytimeServer extends SessionListener<Object, Object> {
 		m_ss = ss;
 	}
 
-	// This method is called when this component is being deactivated.
+	// This method is invoked when this component is being deactivated.
 	void deactivate() {
 		// Stop the Session Service
 		m_tcpServer.dispose();
