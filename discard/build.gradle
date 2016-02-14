@@ -35,10 +35,10 @@ repositories {
 }
 
 dependencies {
-	compile 'org.slf4j:slf4j-api:1.7.12'
-	compile 'org.slf4j:slf4j-simple:1.7.12'
-	compile 'com.lmax:disruptor:3.3.2'
-	compile 'org.jruyi:jruyi-core:2.4.1'
+	compile 'org.slf4j:slf4j-api:1.7.14'
+	compile 'org.slf4j:slf4j-simple:1.7.14'
+	compile 'com.lmax:disruptor:3.3.4'
+	compile 'org.jruyi:jruyi-core:2.5.0'
 }
 
 compileJava {
